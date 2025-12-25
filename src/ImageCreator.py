@@ -51,14 +51,26 @@ class ImageCreator:
         # Splitting each line of text into 10 words
         image_height = 1080
         image_width = 1920
-        y = 150 # starting y index
+        bottom_margin = 100
+        line_spacing = 16
+        caption_lines = ImageCreator.split_string(text, 10)
+        line_height = ImageCreator.get_text_dimensions("Ag", font)[1]
+        total_text_height = len(caption_lines) * line_height + (len(caption_lines) - 1) * line_spacing
+        y = image_height - bottom_margin - total_text_height
 
-        for line in ImageCreator.split_string(text, 10):
+        for line in caption_lines:
             text_dimensions = ImageCreator.get_text_dimensions(line, font)
             x = (image_width - text_dimensions[0]) / 2
-            
-            draw.text((x, y),line,font=font,fill=(255,255,255))
-            y += 50 # adding 50 pixel buffer to next line
+
+            draw.text(
+                (x, y),
+                line,
+                font=font,
+                fill=(255, 255, 255),
+                stroke_width=2,
+                stroke_fill=(0, 0, 0),
+            )
+            y += line_height + line_spacing
 
         # Saving the picture
         img.save(complete_file)
@@ -100,6 +112,5 @@ class ImageCreator:
             lines.append(line)
 
         return lines
-
 
 
